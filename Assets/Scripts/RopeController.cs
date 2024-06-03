@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class RopeController : MonoBehaviour
@@ -8,11 +9,26 @@ public class RopeController : MonoBehaviour
     Vector3 startPosition;       // スワイプ開始時の位置
     Vector3 lastMousePosition;   // 前フレームでのマウスの位置
 
+    // SmokeControllerを持つGameObjectへの参照を保持するためのシリアライズフィールド
+    [SerializeField]
+    private GameObject smokeObject;
+    // SmokeControllerコンポーネントへの参照
+    private SmokeController smokeController;
+
+    //警笛中か判定する変数
+    private bool isSmoking = false;
+
     void Start()
     {
         rectTransform = GetComponent<RectTransform>(); // RectTransformを取得
         startPosition = rectTransform.anchoredPosition3D; // 初期位置を保存（Vector3型）
         lastMousePosition = Input.mousePosition; // 前フレームのマウス位置を保存
+
+        // smokeObjectがnullでない場合、そのオブジェクトからSmokeControllerコンポーネントを取得
+        if (smokeObject != null)
+        {
+            smokeController = smokeObject.GetComponent<SmokeController>();
+        }
     }
 
     void Update()
@@ -37,11 +53,27 @@ public class RopeController : MonoBehaviour
         }
 
 
-        //
-        if(rectTransform.anchoredPosition3D.y < -400) 
+        //警笛が一定以下に下がっていたら動作
+        WhistleAction();
+
+    }
+
+    private void WhistleAction()
+    {
+        if (rectTransform.anchoredPosition3D.y < -400)
         {
+            smokeController.SmokeUp();
             Debug.Log(rectTransform.anchoredPosition3D);
+            if (!isSmoking)
+            {
+                isSmoking = true;
+                GetComponent<AudioSource>().Play();
+            }
         }
-        
+        else
+        {
+            isSmoking = false;
+            smokeController.SmokeDown();
+        }
     }
 }
