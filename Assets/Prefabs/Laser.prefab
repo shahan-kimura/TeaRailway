@@ -232,4 +232,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f641fa7b28468b049b482518010ffb5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  period: 1
+  period: 1.2

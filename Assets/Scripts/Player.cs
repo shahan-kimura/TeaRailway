@@ -21,42 +21,46 @@ public class Player : MonoBehaviour
     // コンポーネントを参照しておく変数
     new Rigidbody rigidbody;
 
-    [SerializeField] GameObject laserPrefab;
+    private PlayerAttack playerAttack;          //攻撃用ScriptのplayerAttackを宣言
 
     // Start is called before the first frame update
     void Start()
     {
         // コンポーネントを事前に参照
         rigidbody = GetComponent<Rigidbody>();
+
+        // PlayerAttack スクリプトを持つコンポーネントを取得
+        playerAttack = GetComponent<PlayerAttack>();
     }
 
     // 毎フレームに一度実行される更新処理です。
     void Update()
     {
-        // 接地状態の場合
-        //if (groundChecker.IsCasted)
-        //{
-            Vector3 playerPosition = transform.position;
+
+        // ジャンプ
+        if (Input.GetButtonDown("Jump"))
+        {
+            rigidbody.AddForce(jumpPower, ForceMode.Impulse);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            playerAttack.FindClosestEnemyAndFire();
+        }
+
+        if (Input.GetKeyDown(KeyCode.V))  // Vが押されたら
+        {
+            playerAttack.FindAllEnemiesAndFire();
+        }
 
 
-            // ジャンプ
-            if (Input.GetButtonDown("Jump"))
-            {
-                rigidbody.AddForce(jumpPower, ForceMode.Impulse);
-            }
-
-            if(Input.GetKeyDown(KeyCode.B))
-            {
-                Instantiate(laserPrefab, playerPosition, Quaternion.identity);
-            }
-
-
-            // 等速度運動
-            var velocity = rigidbody.velocity;
-            velocity.x = speed;
-            rigidbody.velocity = velocity;
+        // 等速度運動
+        var velocity = rigidbody.velocity;
+        velocity.x = speed;
+        rigidbody.velocity = velocity;
         //}
     }
+
 
 }
 
