@@ -233,3 +233,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   period: 1.2
+  deltaPeriod: 0.5
+  explosionPrefab: {fileID: 7666039312751686219, guid: 01fcb970760d8b44c8d56f00c2fe4931, type: 3}

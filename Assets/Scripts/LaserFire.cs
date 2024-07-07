@@ -9,8 +9,14 @@ public class LaserFire : MonoBehaviour
     Vector3 position;
     Transform target; // レーザー対象
 
-    [SerializeField] float period = 1f;
+    [SerializeField][Tooltip("着弾時間")] float period = 1f;                  
+    [SerializeField][Tooltip("着弾時差")] float deltaPeriod = 0.5f;
     Vector3 randomPos; // ターゲットが存在しない時の空撃ち用position
+
+    [SerializeField][Tooltip("着弾パーティクル")] GameObject explosionPrefab;
+    GameObject explosionInstance; // 爆発エフェクトのインスタンス
+
+    bool exploded = false; // 爆発エフェクトが再生されたかどうかのフラグ
 
     // レーザーのターゲットを設定する関数
     public void SetTarget(Transform targetTransform)
@@ -21,11 +27,11 @@ public class LaserFire : MonoBehaviour
     void Start()
     {
         position = transform.position;
-        randomPos = new Vector3(Camera.main.transform.position.x + 10f,
-                                Random.Range(0f, 20f), Random.Range(0f, 20f));
+        randomPos = new Vector3(Camera.main.transform.position.x + 20f,
+                                Random.Range(0f, 10f), Random.Range(0f, 5f));
         velocity = new Vector3(Random.Range(-5.0f, -2.5f), Random.Range(-6.0f, 6.0f), Random.Range(-6.0f, 6.0f));
 
-        period += Random.Range(-0.2f, 0.2f);
+        period += Random.Range(-deltaPeriod, deltaPeriod);
     }
 
     void Update()
@@ -53,8 +59,9 @@ public class LaserFire : MonoBehaviour
         acceleration += (diff - velocity * period) * 2f / (period * period);
 
         period -= Time.deltaTime;
-        if (period < 0f)
+        if (period < 0f && !exploded)
         {
+            TriggerExplosion(); // 着弾時に爆発エフェクトを再生
             Destroy(gameObject);
             return;
         }
@@ -62,5 +69,16 @@ public class LaserFire : MonoBehaviour
         velocity += acceleration * Time.deltaTime; // 現在速度→加速度*時間
         position += velocity * Time.deltaTime; // 現在位置→速度*時間
         transform.position = position;
+    }
+
+    // 爆発エフェクトを再生する関数
+    void TriggerExplosion()
+    {
+        // 爆発エフェクトをインスタンス化して、位置を設定
+        explosionInstance = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        exploded = true; // 爆発が再生されたことをフラグで管理
+
+        // 爆発エフェクトが再生した後に、自動的にこのGameObjectを破棄
+        Destroy(explosionInstance, explosionPrefab.GetComponent<ParticleSystem>().main.duration);
     }
 }

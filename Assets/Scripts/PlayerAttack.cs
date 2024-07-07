@@ -20,6 +20,10 @@ public class PlayerAttack : MonoBehaviour
         {
             FireLaserAtTarget(closestEnemy);
         }
+        else
+        {
+            FireLaserAtRandomPosition(); // ターゲットがない場合はランダム位置に発射
+        }
     }
 
     // ステージ内のすべての敵をサーチして弾を発射する関数
@@ -36,6 +40,13 @@ public class PlayerAttack : MonoBehaviour
         // 敵の数を取得
         int enemyCount = lockedTargets.Count;
 
+        // 敵がいない場合はランダムな位置に発射する
+        if (enemyCount == 0)
+        {
+            FireMultipleLasersAtRandomPosition(20); // 20発発射する
+            return;
+        }
+
         // 20発の弾丸を敵の数に応じて分割して発射
         int bulletsPerEnemy = Mathf.CeilToInt(20f / enemyCount);
         int totalBulletsFired = 0;
@@ -45,8 +56,9 @@ public class PlayerAttack : MonoBehaviour
             // 各敵に対して `bulletsPerEnemy` 発の弾を発射
             for (int i = 0; i < bulletsPerEnemy; i++)
             {
-                FireLaserAtTarget(target);
-                totalBulletsFired++;
+
+                 FireLaserAtTarget(target);
+                 totalBulletsFired++;
 
                 // 20発を超えた場合は発射を終了する
                 if (totalBulletsFired >= 20)
@@ -82,5 +94,21 @@ public class PlayerAttack : MonoBehaviour
         GameObject laser = Instantiate(laserPrefab,laserSpawner.transform.position, laserSpawner.transform.rotation);
         LaserFire laserScript = laser.GetComponent<LaserFire>();
         laserScript.SetTarget(target.transform);
+    }
+    // ランダムな位置にレーザーを発射する関数
+    void FireLaserAtRandomPosition()
+    {
+        GameObject laser = Instantiate(laserPrefab, laserSpawner.transform.position, laserSpawner.transform.rotation);
+        LaserFire laserScript = laser.GetComponent<LaserFire>();
+        laserScript.SetTarget(null); // ターゲットはnullに設定することでランダムな位置に向かう
+    }
+
+    // ランダムな位置に複数のレーザーを発射する関数
+    void FireMultipleLasersAtRandomPosition(int numLasers)
+    {
+        for (int i = 0; i < numLasers; i++)
+        {
+            FireLaserAtRandomPosition();
+        }
     }
 }
