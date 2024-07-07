@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     // コンポーネントを参照しておく変数
     new Rigidbody rigidbody;
 
+    [SerializeField] GameObject laserPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,11 +36,20 @@ public class Player : MonoBehaviour
         // 接地状態の場合
         //if (groundChecker.IsCasted)
         //{
+            Vector3 playerPosition = transform.position;
+
+
             // ジャンプ
             if (Input.GetButtonDown("Jump"))
             {
                 rigidbody.AddForce(jumpPower, ForceMode.Impulse);
             }
+
+            if(Input.GetKeyDown(KeyCode.B))
+            {
+                Instantiate(laserPrefab, playerPosition, Quaternion.identity);
+            }
+
 
             // 等速度運動
             var velocity = rigidbody.velocity;
@@ -46,4 +57,6 @@ public class Player : MonoBehaviour
             rigidbody.velocity = velocity;
         //}
     }
+
 }
+
