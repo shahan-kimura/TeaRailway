@@ -10,6 +10,9 @@ public class VelocityCheck : MonoBehaviour
     [SerializeField] Text velocityText;
     private Rigidbody rb;
 
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,4 +25,6 @@ public class VelocityCheck : MonoBehaviour
         velocityX = rb.velocity.x;
         velocityText.text = velocityX.ToString("F2") + "km/s";
     }
+
+
 }

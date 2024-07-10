@@ -31,6 +31,9 @@ public class Player : MonoBehaviour
 
         // PlayerAttack スクリプトを持つコンポーネントを取得
         playerAttack = GetComponent<PlayerAttack>();
+
+
+
     }
 
     // 毎フレームに一度実行される更新処理です。
@@ -61,6 +64,10 @@ public class Player : MonoBehaviour
         //}
     }
 
-
+    //ゴール時速度取得のため、プロパティ式で保存
+    public float CurrentSpeed
+    {
+        get { return rigidbody.velocity.magnitude; }
+    }
 }
 
