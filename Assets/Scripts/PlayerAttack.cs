@@ -10,10 +10,17 @@ public class PlayerAttack : MonoBehaviour
 
     [SerializeField] private List<GameObject> lockedTargets = new List<GameObject>();
 
-    [SerializeField] private bool isLockingOn = false;               //ロックオン処理継続判定用のbool
-    [SerializeField] float lockOnInterval = 0.2f;   //ロックオン間隔
-    [SerializeField] float searchRadius = 10f; // サーチ半径
+    [SerializeField] private bool isLockingOn = false;          //ロックオン処理継続判定用のbool
+    [SerializeField] float lockOnInterval = 0.2f;               //ロックオン間隔
+    [SerializeField] float searchRadius = 10f;                  // サーチ半径
 
+    [SerializeField] private MouseClickDetector clickDetector;  //サーチ地点をRayで取得するクラス
+    Vector3 mousePos = Vector3.zero;
+
+    private void Start()
+    {
+        clickDetector = GetComponent<MouseClickDetector>(); //サーチ地点をRayで取得するクラス
+    }
 
     // 一番近い敵をサーチして弾を発射する関数
     public void FindClosestEnemyAndFire()
@@ -137,9 +144,11 @@ public class PlayerAttack : MonoBehaviour
         lockedTargets.Clear();          // ロックオンリストをクリア
 
 
-        int enemyLayerMask = LayerMask.GetMask("Enemy"); // 敵のレイヤーを取得
+        int enemyLayerMask = LayerMask.GetMask("Enemy");        // 敵のレイヤーを取得
+        mousePos = clickDetector.RaycastMousePoint();   // マウスポイントを取得
+
         // 現在のオブジェクトの位置を中心に、半径searchRadiusの球体を描く。この範囲内にあるenemyLaerColliderを取得。
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius, enemyLayerMask);
+        Collider[] hitColliders = Physics.OverlapSphere(mousePos, searchRadius, enemyLayerMask);
         Debug.Log("StartLockOn");
 
         // 取得したすべてのColliderに対してループを実行。
@@ -188,7 +197,7 @@ public class PlayerAttack : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, searchRadius);
+        Gizmos.DrawWireSphere(mousePos, searchRadius);
     }
 
 

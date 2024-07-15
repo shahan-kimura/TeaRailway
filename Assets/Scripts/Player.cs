@@ -56,20 +56,21 @@ public class Player : MonoBehaviour
             playerAttack.FindAllEnemiesAndFire();
         }
 
-        //クリック時サーチレーザー
-        if (Input.GetKeyDown(KeyCode.F))
+        // クリック時サーチレーザー
+        if (Input.GetMouseButtonDown(0)) // マウスの左ボタンが押された瞬間
         {
             StartCoroutine(playerAttack.StartLockOn());
         }
-        //クリック時サーチ終了
-        if (Input.GetKeyUp(KeyCode.F))
+
+        // クリック時サーチ終了
+        if (Input.GetMouseButtonUp(0)) // マウスの左ボタンが離された瞬間
         {
             playerAttack.StopLockOn();
         }
 
 
-            // 等速度運動
-            var velocity = rigidbody.velocity;
+        // 等速度運動
+        var velocity = rigidbody.velocity;
         velocity.x = speed;
         rigidbody.velocity = velocity;
         //}
