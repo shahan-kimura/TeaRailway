@@ -45,13 +45,14 @@ public class PlayerAttack : MonoBehaviour
 
     private void FireAtTarget(int bulletsCount)
     {
+        Debug.Log("FireAtTarget");
         // 敵の数を取得
         int enemyCount = lockedTargets.Count;
 
         // 敵がいない場合はランダムな位置に発射する(Mathf.CeilToIntのエラー防止のため先実行)
         if (enemyCount == 0)
         {
-            FireMultipleLasersAtRandomPosition(bulletsCount); // 20発発射する
+            FireMultipleLasersAtRandomPosition(bulletsCount); // 引数分の発射を行う
             return;
         }
 
@@ -64,11 +65,11 @@ public class PlayerAttack : MonoBehaviour
             // 各敵に対して `bulletsPerEnemy` 発の弾を発射
             for (int i = 0; i < bulletsPerEnemy; i++)
             {
-
+                Debug.Log("FireLaserAtTarget");
                 FireLaserAtTarget(target);
                 totalBulletsFired++;
 
-                // 20発を超えた場合は発射を終了する
+                // 発射数を超えた場合は発射を終了する
                 if (totalBulletsFired >= bulletsCount)
                     return;
             }
@@ -99,6 +100,13 @@ public class PlayerAttack : MonoBehaviour
     // ターゲットに向けて弾を発射する関数
     void FireLaserAtTarget(GameObject target)
     {
+        // ターゲットがnullであるかどうかを確認する
+        if (target == null)
+        {
+            Debug.LogWarning("Trying to fire laser at a null target.");
+            return;
+        }
+
         GameObject laser = Instantiate(laserPrefab, laserSpawner.transform.position, laserSpawner.transform.rotation);
         LaserFire laserScript = laser.GetComponent<LaserFire>();
         laserScript.SetTarget(target.transform);
@@ -128,9 +136,11 @@ public class PlayerAttack : MonoBehaviour
         isLockingOn = true;             // ロックオンフラグをtrue
         lockedTargets.Clear();          // ロックオンリストをクリア
 
+
         int enemyLayerMask = LayerMask.GetMask("Enemy"); // 敵のレイヤーを取得
         // 現在のオブジェクトの位置を中心に、半径searchRadiusの球体を描く。この範囲内にあるenemyLaerColliderを取得。
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius, enemyLayerMask);
+        Debug.Log("StartLockOn");
 
         // 取得したすべてのColliderに対してループを実行。
         foreach (var hitCollider in hitColliders)
@@ -141,8 +151,9 @@ public class PlayerAttack : MonoBehaviour
                 // lockedTargetsリストに敵を追加。
                 lockedTargets.Add(hitCollider.gameObject);
 
-                // ロックオンした敵の情報をデバッグログに出力
-                Debug.Log("Locked on to enemy: " + hitCollider.gameObject.name);
+                //hitCollider →ターゲットのコンポーネントを呼び出し
+                //ターゲットサークルの表示命令を実行
+                hitCollider.gameObject.GetComponent<EnemyRoutine>().ActivateLockOn();
             }
 
             yield return new WaitForSeconds(lockOnInterval);    //ロックオン間隔待機
@@ -155,12 +166,29 @@ public class PlayerAttack : MonoBehaviour
                 yield break;
             }
         }
+
+        // すべてのロックオンが完了した場合、isLockingOnがfalseになるまで待機
+        while (isLockingOn)
+        {
+            yield return null;
+        }
+
+        // isLockingOnがfalseになった瞬間に発射
+        Debug.Log("shot!");
+        FireAtTarget((lockedTargets.Count) * 3);
     }
 
     //7.15 isLockingOn停止＆発射用
     public void StopLockOn()
     {
         isLockingOn = false;
+    }
+
+    // ギズモを使用してサーチ範囲を視覚化
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, searchRadius);
     }
 
 

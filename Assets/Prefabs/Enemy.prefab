@@ -4901,8 +4901,9 @@ GameObject:
   - component: {fileID: 5793650311588042171}
   - component: {fileID: 7467233088287764175}
   - component: {fileID: 3139930295694424499}
+  - component: {fileID: 1356441401559231035}
   - component: {fileID: 2746569148229082380}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -5012,6 +5013,20 @@ MonoBehaviour:
   HP: 30
   MaxHP: 1
   destroyEffect: {fileID: 7666039312751686219, guid: 01fcb970760d8b44c8d56f00c2fe4931, type: 3}
+  TagName: Attack
+--- !u!114 &1356441401559231035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6182147432459440115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ca7d98b604d45e4f96b15853a2d40b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lockOnCircle: {fileID: 0}
   TagName: Attack
 --- !u!54 &2746569148229082380
 Rigidbody:

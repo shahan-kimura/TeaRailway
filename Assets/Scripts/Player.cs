@@ -59,7 +59,6 @@ public class Player : MonoBehaviour
         //クリック時サーチレーザー
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("on click");
             StartCoroutine(playerAttack.StartLockOn());
         }
         //クリック時サーチ終了
