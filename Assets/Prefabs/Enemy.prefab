@@ -5028,6 +5028,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lockOnCircle: {fileID: 0}
   TagName: Attack
+  amplitude: 2
+  frequency: 1
+  sinValue_x: 0
   period: 2
   deltaPeriod: 1
 --- !u!54 &2746569148229082380
