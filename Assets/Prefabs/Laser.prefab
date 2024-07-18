@@ -235,7 +235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   period: 1.2
   deltaPeriod: 0.5
-  explosionPrefab: {fileID: 7666039312751686219, guid: 01fcb970760d8b44c8d56f00c2fe4931, type: 3}
+  explosionPrefab: {fileID: 7536091670634658713, guid: a46be7d48b574a24aa2f619c7be2caf1, type: 3}
 --- !u!82 &-3913918060971000543
 AudioSource:
   m_ObjectHideFlags: 0
@@ -254,7 +254,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 231
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

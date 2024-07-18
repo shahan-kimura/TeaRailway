@@ -29,7 +29,7 @@ public class LaserFire : MonoBehaviour
         position = transform.position;
         randomPos = new Vector3(Camera.main.transform.position.x + 20f,
                                 Random.Range(0f, 10f), Random.Range(0f, 5f));
-        velocity = new Vector3(Random.Range(-5.0f, -2.5f), Random.Range(-6.0f, 6.0f), Random.Range(-6.0f, 6.0f));
+        velocity = new Vector3(Random.Range(-16.0f, 16.0f), Random.Range(1.0f, 16.0f), Random.Range(-6.0f, 6.0f));
 
         period += Random.Range(-deltaPeriod, deltaPeriod);
     }
