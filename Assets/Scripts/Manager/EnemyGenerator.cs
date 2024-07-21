@@ -13,7 +13,8 @@ public class EnemyGenerator : MonoBehaviour
     [SerializeField] private float spawnInterval = 2f; // 敵の出現間隔
     [SerializeField] private int enemiesPerPhase = 5; // 各フェーズで出現する敵の数
 
-    Transform spawnPoint;
+    Transform spawnPoint;   //現在のspawnPoint
+    GameObject enemyPrefab; //現在のenemyPrefab
 
 
     private PhaseManager.Phase currentPhase; // 現在のフェーズ
@@ -42,21 +43,25 @@ public class EnemyGenerator : MonoBehaviour
                 spawnInterval = 0.2f;
                 enemiesPerPhase = 5;
                 spawnPoint = spawnPoints[0];
+                enemyPrefab = enemyPrefabs[0];
                 break;
             case PhaseManager.Phase.Phase2:
                 spawnInterval = 0.2f;
                 enemiesPerPhase = 5;
                 spawnPoint = spawnPoints[1];
+                enemyPrefab = enemyPrefabs[1];
                 break;
             case PhaseManager.Phase.Phase3:
                 spawnInterval = 0.2f;
                 enemiesPerPhase = 10;
                 spawnPoint = spawnPoints[0];
+                enemyPrefab = enemyPrefabs[0];
                 break;
             case PhaseManager.Phase.Phase4:
                 spawnInterval = 0.2f;
                 enemiesPerPhase = 10;
                 spawnPoint = spawnPoints[1];
+                enemyPrefab = enemyPrefabs[1];
                 break;
             case PhaseManager.Phase.Phase5:
                 spawnInterval = 0.2f;
@@ -78,9 +83,6 @@ public class EnemyGenerator : MonoBehaviour
 
         for (int i = 0; i < enemiesToSpawn; i++)
         {
-            // 敵のプレハブをランダムに選択する
-            GameObject enemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
-
             // 敵をスポーンポイントにスポーンさせる
             Instantiate(enemyPrefab, spawnPoint.position, spawnPoint.rotation);
 

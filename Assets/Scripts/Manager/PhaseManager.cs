@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 /// <summary>
 /// ゲームのフェーズを管理するクラス。
@@ -20,6 +21,11 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] private Phase currentPhase; // 現在のフェーズを管理する変数
     [SerializeField] private EnemyGenerator enemyGenerator; // 敵の生成を管理する EnemyGenerator の参照
 
+    public CinemachineVirtualCamera vCamSide; //サイドビューカメラ
+    [SerializeField] private CinemachineVirtualCamera vCamTop;  //トップビュー
+    [SerializeField] private CinemachineVirtualCamera vCamBack; //バックビュー
+
+
     private void Start()
     {
         // 初期フェーズを設定
@@ -33,6 +39,8 @@ public class PhaseManager : MonoBehaviour
     public void SetPhase(Phase newPhase)
     {
         currentPhase = newPhase;
+        // カメラの設定
+        UpdateCamera(currentPhase);
 
         // EnemyGenerator に新しいフェーズを通知
         if (enemyGenerator != null)
@@ -48,7 +56,9 @@ public class PhaseManager : MonoBehaviour
     }
     public void NextPhase()
     {
-        currentPhase++;;
+        currentPhase++;
+        // カメラの設定
+        UpdateCamera(currentPhase);
 
         Debug.Log("nextphase");
 
@@ -72,5 +82,39 @@ public class PhaseManager : MonoBehaviour
     public Phase GetCurrentPhase()
     {
         return currentPhase;
+    }
+
+    /// <summary>
+    /// フェーズに応じてカメラを更新するメソッド。
+    /// </summary>
+    /// <param name="phase">現在のフェーズ</param>
+    private void UpdateCamera(Phase phase)
+    {
+        switch (phase)
+        {
+            case Phase.Phase1:
+            case Phase.Phase3:
+            case Phase.Phase5:
+                SetCamera(vCamSide);
+                break;
+            case Phase.Phase2:
+                SetCamera(vCamTop);
+                break;
+            case Phase.Phase4:
+                SetCamera(vCamBack);
+                break;
+        }
+    }
+
+    // 指定されたカメラをアクティブにするメソッド
+    private void SetCamera(CinemachineVirtualCamera activeCamera)
+    {
+        // すべてのカメラの優先度を0に設定
+        vCamSide.Priority = 0;
+        vCamTop.Priority = 0;
+        vCamBack.Priority = 0;
+
+        // 指定されたカメラの優先度を10に設定
+        activeCamera.Priority = 10;
     }
 }
