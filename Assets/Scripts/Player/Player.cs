@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
     // コンポーネントを参照しておく変数
     new Rigidbody rigidbody;
 
+    // フェイズシフト用仮置き
+    [SerializeField] PhaseManager phaseManager;
+
     private PlayerAttack playerAttack;          //攻撃用ScriptのplayerAttackを宣言
 
     // Start is called before the first frame update
@@ -32,6 +35,8 @@ public class Player : MonoBehaviour
         // PlayerAttack スクリプトを持つコンポーネントを取得
         playerAttack = GetComponent<PlayerAttack>();
 
+        //フェイズシフト用仮置き
+        phaseManager = GameObject.FindObjectOfType<PhaseManager>();
 
 
     }
@@ -68,6 +73,11 @@ public class Player : MonoBehaviour
             playerAttack.StopLockOn();
         }
 
+        //フェイズシフト
+        if (Input.GetKeyDown(KeyCode.P))  // Vが押されたら
+        {
+            phaseManager.NextPhase();
+        }
 
         // 等速度運動
         var velocity = rigidbody.velocity;
