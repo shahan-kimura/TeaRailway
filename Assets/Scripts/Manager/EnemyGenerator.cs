@@ -19,6 +19,7 @@ public class EnemyGenerator : MonoBehaviour
 
     private PhaseManager.Phase currentPhase; // 現在のフェーズ
 
+
     private void Start()
     {
         spawnPoint = spawnPoints[(int)currentPhase];
@@ -71,6 +72,13 @@ public class EnemyGenerator : MonoBehaviour
 
         // 新しいフェーズに応じて敵の生成を開始する
         StartCoroutine(SpawnEnemies());
+
+        //Phase毎のEnemy数をPhaseManagerに通知
+        PhaseManager phaseManager = FindObjectOfType<PhaseManager>();
+        phaseManager.PhaseEnemyCountSet(enemiesPerPhase);
+
+
+
     }
 
     /// <summary>

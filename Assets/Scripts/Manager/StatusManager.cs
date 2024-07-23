@@ -18,13 +18,11 @@ public class StatusManager : MonoBehaviour
         //HPが0以下なら、撃破エフェクトを生成してMainを破壊
         if (HP <= 0)
         {
-            HP = 0;
-            var effect = Instantiate(destroyEffect);
-            effect.transform.position = transform.position;
-            Destroy(effect,5);
-            Destroy(MainObject);
+            DestroyThisObject();
         }
     }
+
+ 
 
     private void OnTriggerEnter(Collider other)
     {
@@ -42,6 +40,27 @@ public class StatusManager : MonoBehaviour
     private void Damage()
     {
         HP--;
+    }
+
+    private void DestroyThisObject()
+    {
+        HP = 0;
+        var effect = Instantiate(destroyEffect);
+        effect.transform.position = transform.position;
+        EnemyTagDestroyCount();
+        Destroy(effect, 5);
+        Destroy(MainObject);
+    }
+
+    private void EnemyTagDestroyCount()
+    {
+        if (gameObject.CompareTag("Enemy"))
+        {
+            //敵撃破判定を送るために呼び出し
+            PhaseManager phaseManager = FindObjectOfType<PhaseManager>();
+            phaseManager.EnemyDestroyCount();
+        }
+
     }
 
 }

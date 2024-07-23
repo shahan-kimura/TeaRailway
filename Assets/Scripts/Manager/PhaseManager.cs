@@ -25,6 +25,8 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera vCamTop;  //トップビュー
     [SerializeField] private CinemachineVirtualCamera vCamBack; //バックビュー
 
+    private int currentEnemy = 0;
+
 
     private void Start()
     {
@@ -116,5 +118,20 @@ public class PhaseManager : MonoBehaviour
 
         // 指定されたカメラの優先度を10に設定
         activeCamera.Priority = 10;
+    }
+
+    public void PhaseEnemyCountSet(int phaseEnemy)
+    {
+        currentEnemy = phaseEnemy;
+    } 
+    public void EnemyDestroyCount()
+    {
+        currentEnemy--;
+
+        if (currentEnemy <= 0)
+        {
+            NextPhase();
+        }
+
     }
 }
