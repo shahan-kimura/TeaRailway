@@ -11,6 +11,9 @@ public class LaserFire : MonoBehaviour
 
     [SerializeField][Tooltip("着弾時間")] float period = 1f;                  
     [SerializeField][Tooltip("着弾時差")] float deltaPeriod = 0.5f;
+    [SerializeField][Tooltip("x軸初速")] float x_initial_v = 10f; // X軸方向の初速度
+    [SerializeField][Tooltip("y軸初速")] float y_initial_v = 10f; // Y軸方向の初速度
+    [SerializeField][Tooltip("z軸初速")] float z_initial_v = 10f; // Z軸方向の初速度
     Vector3 randomPos; // ターゲットが存在しない時の空撃ち用position
 
     [SerializeField][Tooltip("着弾パーティクル")] GameObject explosionPrefab;
@@ -29,7 +32,10 @@ public class LaserFire : MonoBehaviour
         position = transform.position;
         randomPos = new Vector3(Camera.main.transform.position.x + 20f,
                                 Random.Range(0f, 10f), Random.Range(0f, 5f));
-        velocity = new Vector3(Random.Range(-16.0f, 16.0f), Random.Range(1.0f, 16.0f), Random.Range(-6.0f, 6.0f));
+        // レーザーの初期速度をランダムに設定、地面めり込み禁止でy軸のみ0以上に
+        velocity = new Vector3(Random.Range(-x_initial_v, x_initial_v),
+                                Random.Range(0, y_initial_v),
+                                Random.Range(-z_initial_v, z_initial_v));
 
         period += Random.Range(-deltaPeriod, deltaPeriod);
     }

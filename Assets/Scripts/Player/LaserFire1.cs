@@ -23,9 +23,9 @@ public class LaserFire1 : MonoBehaviour
         // レーザーの初期位置を設定
         position = transform.position;
 
-        // レーザーの初期速度をランダムに設定
+        // レーザーの初期速度をランダムに設定、地面めり込み禁止でy軸のみ0以上に
         velocity = new Vector3(Random.Range(-x_initial_v, x_initial_v),
-                                Random.Range(-y_initial_v, y_initial_v),
+                                Random.Range(0, y_initial_v),
                                 Random.Range(-z_initial_v, z_initial_v));
 
         // 着弾時間をランダムに変動させる
