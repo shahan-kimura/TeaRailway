@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
 
     private PlayerAttack playerAttack;          //攻撃用ScriptのplayerAttackを宣言
 
+    public bool isDecoy = false;   // デコイ放出中かの判定
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,10 +75,10 @@ public class Player : MonoBehaviour
             playerAttack.StopLockOn();
         }
 
-        //フェイズシフト
-        if (Input.GetKeyDown(KeyCode.P))  // Vが押されたら
+        //デコイ状態反転
+        if (Input.GetKeyDown(KeyCode.P))  // Pが押されたら
         {
-            phaseManager.NextPhase();
+            isDecoy = !isDecoy;
         }
 
         // 等速度運動
@@ -90,6 +92,12 @@ public class Player : MonoBehaviour
     public float CurrentSpeed
     {
         get { return rigidbody.velocity.magnitude; }
+    }
+
+
+    public void IsDecoy()
+    {
+        isDecoy = !isDecoy;
     }
 }
 

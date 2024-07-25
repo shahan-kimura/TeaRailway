@@ -8,6 +8,8 @@ public class LaserFire : MonoBehaviour
     Vector3 velocity;
     Vector3 position;
     Transform target; // レーザー対象
+    Transform beforTarget;
+
 
     [SerializeField][Tooltip("着弾時間")] float period = 1f;                  
     [SerializeField][Tooltip("着弾時差")] float deltaPeriod = 0.5f;
@@ -19,8 +21,9 @@ public class LaserFire : MonoBehaviour
     [SerializeField][Tooltip("着弾パーティクル")] GameObject explosionPrefab;
     GameObject explosionInstance; // 爆発エフェクトのインスタンス
 
-    bool exploded = false; // 爆発エフェクトが再生されたかどうかのフラグ
+    bool exploded = false;  // 爆発エフェクトが再生されたかどうかのフラグ
 
+    Player player;
     // レーザーのターゲットを設定する関数
     public void SetTarget(Transform targetTransform)
     {
@@ -38,9 +41,17 @@ public class LaserFire : MonoBehaviour
                                 Random.Range(-z_initial_v, z_initial_v));
 
         period += Random.Range(-deltaPeriod, deltaPeriod);
+
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
     void Update()
+    {
+        DecoyCheck();
+        HomingSequence();
+    }
+
+    private void HomingSequence()
     {
         acceleration = Vector3.zero; // 初期加速度は0
 
@@ -87,4 +98,23 @@ public class LaserFire : MonoBehaviour
         // 爆発エフェクトが再生した後に、自動的にこのGameObjectを破棄
         Destroy(explosionInstance, explosionPrefab.GetComponent<ParticleSystem>().main.duration);
     }
+
+    void DecoyCheck()
+    {
+        if (player.isDecoy)
+        {
+            Transform currentDecoy = GameObject.FindWithTag("Decoy").GetComponent<Transform>();
+
+            if (currentDecoy != null)
+            {
+                beforTarget = target;
+                target = currentDecoy;
+            }
+        }
+        else if((target == null) && (beforTarget != null))
+        {
+            target = beforTarget;
+        }
+    }
+
 }
