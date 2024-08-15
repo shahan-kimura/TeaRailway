@@ -5,17 +5,28 @@ using UnityEngine;
 public class StatusManager : MonoBehaviour
 {
     [SerializeField] GameObject MainObject; //このスクリプトをアタッチするオブジェクト
-    [SerializeField] int HP =1;             //HP現在値
-    [SerializeField] int MaxHP =1;          //いずれMaxHP利用する際に使用
+    [SerializeField] int hp  =1;             //hp現在値
+    [SerializeField] int maxHP =1;          //いずれMaxhp利用する際に使用
+
+    //hpのプロパティ化用宣言
+    public int HP { get; private set; }
+    public int MaxHP { get; private set; }
 
     [SerializeField] GameObject destroyEffect;  //撃破エフェクト
 
     [SerializeField] string TagName;            //当たり判定となるタグ
 
+    private void Start()
+    {
+        //プロパティの数値初期化
+        HP = hp;
+        MaxHP = maxHP;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        //HPが0以下なら、撃破エフェクトを生成してMainを破壊
+        //hpが0以下なら、撃破エフェクトを生成してMainを破壊
         if (HP <= 0)
         {
             DestroyThisObject();
@@ -47,13 +58,30 @@ public class StatusManager : MonoBehaviour
         HP = 0;
         var effect = Instantiate(destroyEffect);
         effect.transform.position = transform.position;
-        EnemyTagDestroyCount();
+        DestroyTagCheck();
         Destroy(effect, 5);
         Destroy(MainObject);
     }
 
-    private void EnemyTagDestroyCount()
+    private void DestroyTagCheck()
     {
+        switch (gameObject.tag)
+        {
+            case "Enemy":
+                //敵撃破判定をPhaseManagerへ通知
+                PhaseManager phaseManager = FindObjectOfType<PhaseManager>();
+                phaseManager.EnemyDestroyCount();
+                break;
+
+            //破壊されたタグがplayerならUIからGameOverを呼び出し
+            case "Player":
+                UIManager uiManager = FindObjectOfType<UIManager>();
+                uiManager.GameOver();
+                break;
+            default:
+                break;
+        }
+
         if (gameObject.CompareTag("Enemy"))
         {
             //敵撃破判定を送るために呼び出し

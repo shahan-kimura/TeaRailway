@@ -101,8 +101,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainObject: {fileID: 3071541456515247541}
-  HP: 5
-  MaxHP: 1
+  hp: 2
+  maxHP: 2
   destroyEffect: {fileID: 2877281047363787094, guid: 1224fa807214f40419640bfebc68cc77, type: 3}
   TagName: Attack
 --- !u!114 &168749784470919328

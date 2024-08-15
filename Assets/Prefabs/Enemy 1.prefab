@@ -343,6 +343,7 @@ MonoBehaviour:
   target: {fileID: 0}
   EnemyLaserPrefab: {fileID: 1985489382211358489, guid: 3c0b8a8947b21a944b87b896eb415100, type: 3}
   attackInterval: 2
+  fireDeltaPeriod: 5
 --- !u!1 &6619255645273428714
 GameObject:
   m_ObjectHideFlags: 0
@@ -5426,8 +5427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainObject: {fileID: 7545127640229871934}
-  HP: 5
-  MaxHP: 1
+  hp: 5
+  maxHP: 5
   destroyEffect: {fileID: 2877281047363787094, guid: 1224fa807214f40419640bfebc68cc77, type: 3}
   TagName: Attack
 --- !u!114 &6770101609628400862
