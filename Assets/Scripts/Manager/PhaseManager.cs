@@ -18,7 +18,7 @@ public class PhaseManager : MonoBehaviour
         Phase5,
     }
 
-    [SerializeField] private Phase currentPhase; // 現在のフェーズを管理する変数
+    [SerializeField] public Phase CurrentPhase { get; private set; } // 現在のフェーズを管理するプロパティ
     [SerializeField] private EnemyGenerator enemyGenerator; // 敵の生成を管理する EnemyGenerator の参照
 
     public CinemachineVirtualCamera vCamSide; //サイドビューカメラ
@@ -31,7 +31,7 @@ public class PhaseManager : MonoBehaviour
     private void Start()
     {
         // 初期フェーズを設定
-        SetPhase(currentPhase);
+        SetPhase(CurrentPhase);
     }
 
     /// <summary>
@@ -40,14 +40,14 @@ public class PhaseManager : MonoBehaviour
     /// <param name="newPhase">新しいフェーズ</param>
     public void SetPhase(Phase newPhase)
     {
-        currentPhase = newPhase;
+        CurrentPhase = newPhase;
         // カメラの設定
-        UpdateCamera(currentPhase);
+        UpdateCamera(CurrentPhase);
 
         // EnemyGenerator に新しいフェーズを通知
         if (enemyGenerator != null)
         {
-            enemyGenerator.UpdatePhase(currentPhase);
+            enemyGenerator.UpdatePhase(CurrentPhase);
         }
         else
         {
@@ -58,16 +58,16 @@ public class PhaseManager : MonoBehaviour
     }
     public void NextPhase()
     {
-        currentPhase++;
+        CurrentPhase++;
         // カメラの設定
-        UpdateCamera(currentPhase);
+        UpdateCamera(CurrentPhase);
 
         Debug.Log("nextphase");
 
         // EnemyGenerator に新しいフェーズを通知
         if (enemyGenerator != null)
         {
-            enemyGenerator.UpdatePhase(currentPhase);
+            enemyGenerator.UpdatePhase(CurrentPhase);
         }
         else
         {
@@ -83,7 +83,7 @@ public class PhaseManager : MonoBehaviour
     /// <returns>現在のフェーズ</returns>
     public Phase GetCurrentPhase()
     {
-        return currentPhase;
+        return CurrentPhase;
     }
 
     /// <summary>
@@ -95,15 +95,17 @@ public class PhaseManager : MonoBehaviour
         switch (phase)
         {
             case Phase.Phase1:
-            case Phase.Phase3:
-            case Phase.Phase5:
                 SetCamera(vCamSide);
                 break;
             case Phase.Phase2:
                 SetCamera(vCamTop);
                 break;
+            case Phase.Phase3:
             case Phase.Phase4:
                 SetCamera(vCamBack);
+                break;
+            case Phase.Phase5:
+                SetCamera(vCamSide);
                 break;
         }
     }
