@@ -23,7 +23,10 @@ public class LaserFire : MonoBehaviour
 
     bool exploded = false;  // 爆発エフェクトが再生されたかどうかのフラグ
 
-    Player player;
+    Player player;                  //player
+
+    bool previousIsDecoy = false; // 前回のisDecoy状態
+
     // レーザーのターゲットを設定する関数
     public void SetTarget(Transform targetTransform)
     {
@@ -42,6 +45,7 @@ public class LaserFire : MonoBehaviour
 
         period += Random.Range(-deltaPeriod, deltaPeriod);
 
+        //デコイ判定のためにpublic bool isDecoyを観測するため
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
     }
 
@@ -101,20 +105,36 @@ public class LaserFire : MonoBehaviour
 
     void DecoyCheck()
     {
-        if (player.isDecoy)
+        // 現在のisDecoy状態が前回の状態と異なる場合に処理を実行する
+        // 状態が変わった瞬間だけ処理を行いたいので、現在の状態と前回の状態を比較
+        if (player.isDecoy != previousIsDecoy)
         {
-            Transform currentDecoy = GameObject.FindWithTag("Decoy").GetComponent<Transform>();
-
-            if (currentDecoy != null)
+            // プレイヤーがデコイの状態である（isDecoyがtrue）場合
+            if (player.isDecoy)
             {
-                beforTarget = target;
-                target = currentDecoy;
+                // "Decoy"タグを持つオブジェクトを探し、そのTransformを取得
+                Transform currentDecoy = GameObject.FindWithTag("Decoy").GetComponent<Transform>();
+
+                // デコイが存在する場合に実行
+                if (currentDecoy != null)
+                {
+                    // 現在のターゲットを保存し、新しいターゲットをデコイに設定
+                    beforTarget = target;
+                    target = currentDecoy;
+                    Debug.Log(target.gameObject.name); // デバッグ用: 現在のターゲットの名前を表示
+                }
             }
-        }
-        else if((target == null) && (beforTarget != null))
-        {
-            target = beforTarget;
+            // プレイヤーがデコイの状態でない場合（isDecoyがfalse）で、前回のターゲットが存在する場合
+            else if (beforTarget != null)
+            {
+                // ターゲットを元のターゲットに戻し、前回のターゲットをクリア
+                target = beforTarget;
+                beforTarget = null;
+                Debug.Log(target.gameObject.name); // デバッグ用: 現在のターゲットの名前を表示
+            }
+
+            // 現在の状態を前回の状態として記録する
+            previousIsDecoy = player.isDecoy;
         }
     }
-
 }
