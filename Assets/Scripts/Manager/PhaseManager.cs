@@ -16,6 +16,7 @@ public class PhaseManager : MonoBehaviour
         Phase3,
         Phase4,
         Phase5,
+        PhaseClear,
     }
 
     [SerializeField] public Phase CurrentPhase { get; private set; } // 現在のフェーズを管理するプロパティ
@@ -25,7 +26,8 @@ public class PhaseManager : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera vCamTop;  //トップビュー
     [SerializeField] private CinemachineVirtualCamera vCamBack; //バックビュー
 
-    private int currentEnemy = 0;
+    //残存Enemy数をプロパティ式で定義
+    public int CurrentEnemy { get; private set; } = 0;
 
 
     private void Start()
@@ -41,56 +43,20 @@ public class PhaseManager : MonoBehaviour
     public void SetPhase(Phase newPhase)
     {
         CurrentPhase = newPhase;
-        // カメラの設定
-        UpdateCamera(CurrentPhase);
+        // フェイズの更新の設定
+        UpdatePhase(CurrentPhase);
 
-        // EnemyGenerator に新しいフェーズを通知
-        if (enemyGenerator != null)
-        {
-            enemyGenerator.UpdatePhase(CurrentPhase);
-        }
-        else
-        {
-            Debug.LogWarning("EnemyGenerator is not assigned in PhaseManager.");
-        }
-
-        // 追加のフェーズ変更処理があればここに追加
     }
+
     public void NextPhase()
     {
         CurrentPhase++;
-        // カメラの設定
-        UpdateCamera(CurrentPhase);
 
-        Debug.Log("nextphase");
+        // フェイズの更新の設定
+        UpdatePhase(CurrentPhase);
 
-        // EnemyGenerator に新しいフェーズを通知
-        if (enemyGenerator != null)
-        {
-            enemyGenerator.UpdatePhase(CurrentPhase);
-        }
-        else
-        {
-            Debug.LogWarning("EnemyGenerator is not assigned in PhaseManager.");
-        }
-
-        // 追加のフェーズ変更処理があればここに追加
     }
-
-    /// <summary>
-    /// 現在のフェーズを取得するメソッド。
-    /// </summary>
-    /// <returns>現在のフェーズ</returns>
-    public Phase GetCurrentPhase()
-    {
-        return CurrentPhase;
-    }
-
-    /// <summary>
-    /// フェーズに応じてカメラを更新するメソッド。
-    /// </summary>
-    /// <param name="phase">現在のフェーズ</param>
-    private void UpdateCamera(Phase phase)
+    private void UpdatePhase(Phase phase)
     {
         switch (phase)
         {
@@ -108,6 +74,8 @@ public class PhaseManager : MonoBehaviour
                 SetCamera(vCamSide);
                 break;
         }
+        //phaseによらずEnemyのGenerate処理、敵の湧かないPhaseを実装する際に変えるかも？
+        UpdateEnemyGenerator();     
     }
 
     // 指定されたカメラをアクティブにするメソッド
@@ -124,16 +92,28 @@ public class PhaseManager : MonoBehaviour
 
     public void PhaseEnemyCountSet(int phaseEnemy)
     {
-        currentEnemy = phaseEnemy;
+        CurrentEnemy = phaseEnemy;
     } 
     public void EnemyDestroyCount()
     {
-        currentEnemy--;
+        CurrentEnemy--;
 
-        if (currentEnemy <= 0)
+        if (CurrentEnemy <= 0)
         {
             NextPhase();
         }
 
+    }
+
+    void UpdateEnemyGenerator()
+    {
+        if (enemyGenerator != null)
+        {
+            enemyGenerator.UpdatePhase(CurrentPhase);
+        }
+        else
+        {
+            Debug.LogWarning("EnemyGenerator is not assigned in PhaseManager.");
+        }
     }
 }
