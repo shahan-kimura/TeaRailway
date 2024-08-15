@@ -82,13 +82,6 @@ public class StatusManager : MonoBehaviour
                 break;
         }
 
-        if (gameObject.CompareTag("Enemy"))
-        {
-            //“GŒ‚”j”»’è‚ğ‘—‚é‚½‚ß‚ÉŒÄ‚Ño‚µ
-            PhaseManager phaseManager = FindObjectOfType<PhaseManager>();
-            phaseManager.EnemyDestroyCount();
-        }
-
     }
 
 }
