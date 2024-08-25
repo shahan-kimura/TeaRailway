@@ -58,6 +58,7 @@ public class PhaseManager : MonoBehaviour
     }
     private void UpdatePhase(Phase phase)
     {
+        //Phaseにおける演出、現在はカメラワーク変更のみ
         switch (phase)
         {
             case Phase.Phase1:

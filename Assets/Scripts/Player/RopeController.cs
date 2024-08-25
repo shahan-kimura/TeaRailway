@@ -15,8 +15,10 @@ public class RopeController : MonoBehaviour
     // SmokeControllerコンポーネントへの参照
     private SmokeController smokeController;
 
-    //警笛中か判定する変数
+    // 警笛中か判定する変数
     private bool isSmoking = false;
+    //ドラッグ中かどうかを判定するフラグ
+    private bool isDragging = false;
 
     void Start()
     {
@@ -35,11 +37,17 @@ public class RopeController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            // マウスをクリックした場合はスワイプ開始
-            startPosition = rectTransform.anchoredPosition3D;
-            lastMousePosition = Input.mousePosition;
+            // UI要素内のクリックのみドラッグを開始
+            if (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, Input.mousePosition, null)) // 修正: マウス位置がUI内にあるか判定
+            {
+                isDragging = true; // 修正: ドラッグ状態を管理するフラグを設定
+                // マウスをクリックした場合はスワイプ開始
+                startPosition = rectTransform.anchoredPosition3D;
+                lastMousePosition = Input.mousePosition;
+            }
         }
-        else if (Input.GetMouseButton(0))
+
+        if (isDragging && Input.GetMouseButton(0)) // ドラッグ状態のみUIを移動
         {
             // ドラッグ中にUI要素を移動する
             Vector3 delta = Input.mousePosition - lastMousePosition;
@@ -48,6 +56,7 @@ public class RopeController : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
+            isDragging = false; // 修正: ドラッグ終了時にフラグをリセット
             // マウスを離した場合は初期位置に戻る
             rectTransform.anchoredPosition3D = startPosition;
         }
